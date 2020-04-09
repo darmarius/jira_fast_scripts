@@ -11,5 +11,4 @@ if (mailServer) {
    	mail.setBody(body.toString())    	
     mail.setMimeType("text/html")
    	mailServer.send(mail)
-}   
-
+}
