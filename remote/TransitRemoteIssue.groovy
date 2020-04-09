@@ -1,9 +1,10 @@
 import com.atlassian.jira.component.ComponentAccessor
 import com.atlassian.jira.applinks.JiraApplicationLinkService
+import java.net.HttpURLConnection
 
-moveIssueToOpen("TASK-1","111")
+transitRemoteIssue("TASK-1","111")
 
-void moveIssueToOpen(String key, String transitionId){
+void transitRemoteIssue(String key, String transitionId){
 	String inputData = """{   
 		"transition": {
 			"id": "${transitionId}" 

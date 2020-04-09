@@ -1,6 +1,7 @@
 import com.atlassian.jira.component.ComponentAccessor
 import groovy.json.JsonSlurper
 import com.atlassian.jira.applinks.JiraApplicationLinkService
+import java.net.HttpURLConnection
 
 createRemoteIssue("summary","desc","EPIC-1","reporter","assignee","Task")
        
