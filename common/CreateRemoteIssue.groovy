@@ -1,4 +1,3 @@
-import javax.ws.rs.core.Response
 import com.atlassian.jira.component.ComponentAccessor
 import groovy.json.JsonSlurper
 import com.atlassian.jira.applinks.JiraApplicationLinkService

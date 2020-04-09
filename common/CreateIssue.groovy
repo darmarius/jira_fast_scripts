@@ -1,8 +1,7 @@
 import com.atlassian.jira.issue.MutableIssue
-import com.atlassian.jira.user.ApplicationUser
 import com.atlassian.jira.component.ComponentAccessor
 
-ApplicationUser user = ComponentAccessor.getUserManager().getUserByName("Admin")
+def user = ComponentAccessor.getUserManager().getUserByName("Admin")
 def issueFactory = ComponentAccessor.getIssueFactory()
 def issueManager = ComponentAccessor.getIssueManager()
 MutableIssue newTask = issueFactory.getIssue()
