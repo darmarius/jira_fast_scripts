@@ -1,0 +1,69 @@
+<script>
+console.log(111);
+document.querySelector("#com\\.jiraeditor\\.jeditor\\:jeditor-sd-header-scripts").remove();
+document.querySelector("#rw_content > div > div:nth-child(2) > div > div > div.rw_searchjsd_module.rw_module > div > div.rw_background_image").remove();
+document.querySelector("#rw_content > div > div:nth-child(2) > div > div > div.rw_searchjsd_module.rw_module > div").style.background="rgba(44, 65, 115, 1)";
+document.querySelector("#rw_content > div > div:nth-child(2) > div > div > div.rw_navhighlight_module.rw_module").style.background="rgba(44, 65, 115, 1)";
+//save all options
+	var opt12972 = AJS.$("#customfield_13511 > option.option-group-12972").closest('option');
+	var opt12973 = AJS.$("#customfield_13511 > option.option-group-12973").closest('option');
+	var opt12974 = AJS.$("#customfield_13511 > option.option-group-12974").closest('option');
+	var opt12975 = AJS.$("#customfield_13511 > option.option-group-12975").closest('option');
+	var opt12976 = AJS.$("#customfield_13511 > option.option-group-12976").closest('option');
+	var opt12977 = AJS.$("#customfield_13511 > option.option-group-12977").closest('option');
+	var opt12978 = AJS.$("#customfield_13511 > option.option-group-12978").closest('option');
+	var opt12979 = AJS.$("#customfield_13511 > option.option-group-12979").closest('option');
+	var opt12980 = AJS.$("#customfield_13511 > option.option-group-12980").closest('option');
+	var opt12981 = AJS.$("#customfield_13511 > option.option-group-12981").closest('option');
+	var opt12982 = AJS.$("#customfield_13511 > option.option-group-12982").closest('option');
+	
+function newField(opt12972,opt12973,opt12974,opt12975,opt12976,opt12977,opt12978,opt12979,opt12980,opt12981,opt12982){
+
+    	
+	//remove all options
+	AJS.$("#customfield_13511 > option.option-group-12972").closest('option').remove();
+	AJS.$("#customfield_13511 > option.option-group-12973").closest('option').remove();
+	AJS.$("#customfield_13511 > option.option-group-12974").closest('option').remove();
+	AJS.$("#customfield_13511 > option.option-group-12975").closest('option').remove();
+	AJS.$("#customfield_13511 > option.option-group-12976").closest('option').remove();
+	AJS.$("#customfield_13511 > option.option-group-12977").closest('option').remove();
+	AJS.$("#customfield_13511 > option.option-group-12978").closest('option').remove();
+	AJS.$("#customfield_13511 > option.option-group-12979").closest('option').remove();
+	AJS.$("#customfield_13511 > option.option-group-12980").closest('option').remove();
+	AJS.$("#customfield_13511 > option.option-group-12981").closest('option').remove();
+	AJS.$("#customfield_13511 > option.option-group-12982").closest('option').remove();
+	
+	//check main cascade field
+    var mainOption = document.getElementById("customfield_13510").value;
+	//append cascade options for first option
+    if (mainOption == "12970"){
+        AJS.$("#customfield_13511").append(opt12972);
+		AJS.$("#customfield_13511").append(opt12973);
+		AJS.$("#customfield_13511").append(opt12974);
+		AJS.$("#customfield_13511").append(opt12975);
+    }
+	//append cascade options for second option
+    if (mainOption == "12971"){
+        AJS.$("#customfield_13511").append(opt12976);
+		AJS.$("#customfield_13511").append(opt12977);
+		AJS.$("#customfield_13511").append(opt12978);
+		AJS.$("#customfield_13511").append(opt12979);
+		AJS.$("#customfield_13511").append(opt12980);
+		AJS.$("#customfield_13511").append(opt12981);
+		AJS.$("#customfield_13511").append(opt12982);
+    }
+}
+
+function getContent(){
+	newField(opt12972,opt12973,opt12974,opt12975,opt12976,opt12977,opt12978,opt12979,opt12980,opt12981,opt12982);
+	AJS.$(document).on('change', '#customfield_13510',function () {
+		newField(opt12972,opt12973,opt12974,opt12975,opt12976,opt12977,opt12978,opt12979,opt12980,opt12981,opt12982);
+	});
+}
+AJS.$(document).ready(function($){getContent();}); 
+AJS.$(document).bind('dialogContentReady', function(event, dialog){getContent()}); 
+newField(opt12972,opt12973,opt12974,opt12975,opt12976,opt12977,opt12978,opt12979,opt12980,opt12981,opt12982);
+AJS.$(document).on('change', '#customfield_13510',function () {
+	newField(opt12972,opt12973,opt12974,opt12975,opt12976,opt12977,opt12978,opt12979,opt12980,opt12981,opt12982);
+	});
+</script>

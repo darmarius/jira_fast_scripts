@@ -1,0 +1,65 @@
+<script>
+var HttpClient = function() {
+    this.get = function(aUrl, aCallback) {
+        var anHttpRequest = new XMLHttpRequest();
+        anHttpRequest.onreadystatechange = function() { 
+            if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
+                aCallback(anHttpRequest.responseText);
+        }
+
+        anHttpRequest.open( "GET", aUrl, true );            
+        anHttpRequest.send( null );
+    }
+}
+
+function newpage(){
+	var img = document.createElement("img");
+	img.onerror = function() {
+		img.src = "https://uwosh.edu/facilities/wp-content/uploads/sites/105/2018/09/no-photo.png?size=288";
+		img.height=288;
+		img.width=288;
+	}
+	var oldavatar = "/rest/insight_servicedesk/1.0/object/34233/avatar.png?size=16&time=undefined";
+	var addAvatar = setInterval(function(){
+		var iframe = document.querySelector("#rw_popup_dialog > div > div.rw_item_body>iframe");
+		var innerDoc = (iframe.contentDocument) ? iframe.contentDocument : iframe.contentWindow.document;
+		var type = innerDoc.querySelector("#s2id_customfield_12403 > a > span.select2-chosen").textContent;
+		var cf = innerDoc.querySelector("#customfield_12404-helper");
+		var avatar = innerDoc.querySelector("#s2id_customfield_12404 > a > span.select2-chosen > img");
+		var cfValue = innerDoc.querySelector("#s2id_customfield_12404 > a > span.select2-chosen");
+		var url = avatar.src.split("avatar");
+		var client = new HttpClient();
+		var itemType = ""	
+		console.log("url", url[0])
+		client.get(url[0], function(response) {
+			var responseJSON = JSON.parse(response);
+			itemType = responseJSON["objectType"]["name"];
+		
+		console.log("itemType ",itemType, " type ",type, " cfValue ", cfValue.textContent)
+		if (itemType==type && cfValue.textContent != "Search for an object"){
+			if (cf && avatar && oldavatar !=avatar.src){
+				var oldavatar =avatar.src;
+				var equipment_avatar = innerDoc.querySelector("#equipment_avatar");
+				if (equipment_avatar){
+					equipment_avatar.src=avatar.src.replace("size=16","size=288");
+				}
+				else {				
+					img.src=avatar.src.replace("size=16","size=288");
+					cf.append(img);
+				}
+				img.hidden=false;
+			}
+			else{
+				setTimeout(function() {
+					that.idle();
+				}, 10000);
+			}
+		}
+		else {
+			img.hidden=true;
+		}
+		});
+	}, 1000);	
+}
+newpage();
+</script>

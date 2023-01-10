@@ -1,0 +1,51 @@
+<script type="text/javascript">
+
+function loadXMLDoc(){
+	var dialog = document.getElementById('my-clone-dialog');
+	var xmlhttp=new XMLHttpRequest();
+	xmlhttp.open("GET","/rest/scriptrunner/latest/custom/bodyCloneRender",true);
+	xmlhttp.send();
+	var form = document.querySelector("#my-clone-dialog > form");
+	xmlhttp.onreadystatechange=function(){
+		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+			form.innerHTML=xmlhttp.responseText;
+			dialog.showModal();
+		}
+	}
+}
+
+function closeCloneDialog(){
+	var dialog = document.getElementById('my-clone-dialog');
+	dialog.close();
+}
+
+function newpage(){
+	var int = setInterval(function(){
+		var myCloneButton = document.getElementById('my-clone-button');
+		var cancelButton = document.getElementById('cancel-my-clone');
+		var moreListInsight = document.querySelector("#rlabs-actions-more-list-object");
+		if (moreListInsight && cancelButton && myCloneButton){
+			moreListInsight.firstElementChild.firstElementChild.append(myCloneButton);	
+			clearInterval(docOnLoad);			
+		}
+		clearInterval(int);
+	}, 20);
+}
+RLABS.Utils.onload(function () {
+                newpage();
+            });
+var docOnLoad = setInterval(function(){
+	AJS.$(document).ready(function($){newpage();}); 
+}, 100);
+
+newpage();
+
+</script>
+
+<dialog id="my-clone-dialog">
+	<form>
+	</form>
+	<button class="aui-button" id = "cancel-my-clone" type = "reset" onclick="closeCloneDialog()">Close</button>
+</dialog>
+
+<button class="aui-button" id="my-clone-button" onclick="loadXMLDoc()" resolved style = "background-color:#fff">My Clone</button>

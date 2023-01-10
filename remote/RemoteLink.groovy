@@ -3,7 +3,7 @@ import com.atlassian.jira.issue.MutableIssue
 import com.atlassian.jira.applinks.JiraApplicationLinkService
 import java.net.HttpURLConnection
 
-String createRemoteLink(String currentIssue, String remoteIssue, String remoteLinkName)
+String createRemoteLink(String currentIssue, String remoteIssue, String remoteLinkName){
     MutableIssue issue = ComponentAccessor.issueManager.getIssueObject(currentIssue)
     log.info("linking ${issue.key} with ${remoteIssue}")
     def jiraAppId = ComponentAccessor.getComponent(JiraApplicationLinkService.class).getApplicationLinks().find{it.name==remoteLinkName}.getId()

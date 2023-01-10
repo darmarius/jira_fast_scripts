@@ -16,4 +16,5 @@ MutableIssue createIssue(String summary, String desc){
     newTask.setCustomFieldValue(cf,"value")
     Map<String,Object> newIssueParams = ["issue" : newTask] as Map<String,Object>
     issueManager.createIssueObject(user, newIssueParams)
+    //ComponentAccessor.subTaskManager.createSubTaskIssueLink(parentIssue, newSubTask, user)
 }

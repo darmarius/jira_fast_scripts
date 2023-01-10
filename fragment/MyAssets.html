@@ -1,0 +1,38 @@
+<html>
+<head>
+<script type="text/javascript">
+var dialog = document.getElementById('my-assets-dialog');
+var cancelButton = document.getElementById('cancel-my-assets');
+function loadXMLDoc()
+{
+var xmlhttp=new XMLHttpRequest();
+xmlhttp.open("GET","/rest/scriptrunner/latest/custom/configItems",true);
+xmlhttp.send();
+var form = document.querySelector("#my-assets-dialog > form");
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+		form.innerHTML=xmlhttp.responseText;
+		dialog.showModal();
+    }
+  }
+
+}
+cancelButton.addEventListener('click', function() {
+
+			dialog.close();
+			});
+</script>
+</head>
+<body>
+
+<dialog id="my-assets-dialog">
+	<form>
+	</form>
+	<button class="aui-button" id = "cancel-my-assets" type = "reset">Close</button>
+</dialog>
+<button class="aui-button" id="my-assets-button" onclick="loadXMLDoc()">My Assets</button>
+
+</body>
+</html>
