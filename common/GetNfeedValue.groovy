@@ -17,4 +17,6 @@ IFieldDisplayService fieldDisplayService
 CustomField nfeedCustomField = ComponentAccessor.customFieldManager.getCustomFieldObjectsByName("CF name").first()
 def storedValue = fieldValueService.getFieldValues(issue.key, nfeedCustomField.getId())
 String displayedValue = fieldDisplayService.getDisplayResult(issue.key, nfeedCustomField?.id).getDisplay()
-	
+
+//set values
+fieldValueService.setFieldValues(issue.key, nfeedCustomField.id, storedValue)

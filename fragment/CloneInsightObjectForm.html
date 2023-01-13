@@ -1,0 +1,193 @@
+<script type="text/javascript">
+
+            AJS.$('#select2-scheme').append("<option value='3'>Config Items</option>");
+            fillObjectTypes()
+            //objectTypeSelect
+            function fillObjectTypes(){
+                var scheme = document.querySelector("#select2-scheme").value
+                console.log("fillObjectTypes");
+                AJS.$('#select2-object-type').children().remove().end()
+                AJS.$.ajax({
+                    url: "/rest/insight/1.0/objectschema/"+scheme+"/objecttypes/flat",
+                    type: "GET",
+                    dataType: 'json',
+                    success: function(data){
+                        AJS.$.each(data, function(key, value){
+                            if(value.abstractObjectType==false){
+                                AJS.$('#select2-object-type').append("<option value='" + value.id + "'>"+value.name+"</option>");
+                            }
+                        });
+
+                    }
+                });
+            }
+            //sourceObjectSelect
+            function findSourceObject(){
+                var scheme = document.querySelector("#select2-scheme").value;
+                console.log("findSourceObject");
+                var objectType = document.querySelector("#select2-object-type").value;
+                AJS.$('#select2-source-object').children().remove().end();
+                AJS.$.ajax({
+                    url: "/rest/insight/1.0/iql/objects?objectSchemaId="+scheme+"&iql=objectTypeId=%22"+objectType+"%22&resultPerPage=100",
+                    type: "GET",
+                    dataType: 'json',
+                    success: function(data){
+                        AJS.$.each(data.objectEntries, function(key, value){
+                            AJS.$('#select2-source-object').append("<option value='" + value.id + "'>"+value.label+" - "+value.objectKey+"</option>");
+                        });
+
+                    }
+                });
+                document.getElementById('#select2-source-object').options[0].selected="true";
+            }
+            //footer Info
+            function updateFooterTwice(){
+            	setTimeout(() => {  updateFooter(); }, 1000);
+            }
+            function updateFooter(){
+                console.log("updateFooter");
+                var selectedObject = document.querySelector("#select2-source-object").value;
+                var directObject = document.querySelector("#direct-number").value;
+                var id
+                var label
+                if(directObject){
+                    console.log("directObject");
+                    id = directObject.replace(/\\D/g,'');
+                    AJS.$.ajax({
+                        url: "/rest/insight/1.0/object/"+id,
+                        type: "GET",
+                        dataType: 'json',
+                        success: function(data){
+                            console.log("directObject success");
+                            document.querySelector("#sr-dialog > footer > div.aui-dialog2-footer-hint").innerText = "Create many objects like "+data.label;
+                        },
+                        error: function(textStatus){
+                            console.log("directObject error");
+                            AJS.$.ajax({
+                                url: "/rest/insight/1.0/object/"+selectedObject,
+                                type: "GET",
+                                dataType: 'json',
+                                success: function(data){
+                                    console.log("selectedObject success");
+                                    console.log(data.label);
+                                    document.querySelector("#sr-dialog > footer > div.aui-dialog2-footer-hint").innerText = "Create many objects like "+data.label;
+                                },
+                                error: function(textStatus){}
+                            });
+                        }
+                    });
+                }
+                else{
+                    console.log("selectedObject");
+                    id = selectedObject;
+                    AJS.$.ajax({
+                        url: "/rest/insight/1.0/object/"+selectedObject,
+                        type: "GET",
+                        dataType: 'json',
+                        success: function(data){
+                            console.log("selectedObject success");
+                            console.log(data.label);
+                            document.querySelector("#sr-dialog > footer > div.aui-dialog2-footer-hint").innerText = "Create many objects like "+data.label;
+                        },
+                        error: function(textStatus){
+                            console.log("selectedObject error");
+                        }
+                    });
+                }
+                checkButton();
+            }
+            function filterNonDigit(){
+                console.log("filterNonDigit");
+                var quantity = document.querySelector("#quantity");
+                var tempValue = quantity.value.replace(/\\D/g,'');
+                if(tempValue>50) quantity.value = 50
+                else quantity.value = tempValue
+                checkButton();
+            }
+            function checkButton(){
+                console.log("checkButton");
+                var quantity = document.querySelector("#quantity").value;
+                var footer = document.querySelector("#sr-dialog > footer > div.aui-dialog2-footer-hint").innerText;
+                console.log(quantity);
+                console.log(footer);
+                console.log(footer.includes("like"));
+                if(quantity && footer.includes("like"))
+                    document.getElementById("submit").style.visibility="";
+            }
+            function getCurrentURL(){
+                console.log("getCurrentURL");
+                var url = window.location.href;
+                if(url.includes("secure/ShowObject.jspa?id=")){
+                	var id = url.replace(/\\D/g,'');
+                    document.querySelector("#direct-number").value = "CI-"+id;
+                    updateFooter();
+                }
+            }
+            function submit() {
+                var quantity = document.querySelector("#quantity").value;
+                var selectedObject = document.querySelector("#select2-source-object").value;
+                var directObject = document.querySelector("#direct-number").value;
+                var id
+                if(directObject){
+                	id = directObject.replace(/\\D/g,'');
+                }
+                else{
+                	id = selectedObject;
+                }
+                var url = "${baseUrl}/rest/scriptrunner/latest/custom/massClone?action=action"
+                url+= "&quantity="+quantity;
+                url+= "&id="+id;
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("GET", url, true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+                document.querySelector("#sr-dialog").hidden=true;
+                location.reload();
+            }
+
+            AJS.$("#select2-scheme").auiSelect2();
+            AJS.$("#select2-object-type").auiSelect2();
+            AJS.$("#select2-source-object").auiSelect2();
+            getCurrentURL()
+            </script>
+
+
+            <section role="dialog" id="sr-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true" data-aui-remove-on-hide="true">
+                <header class="aui-dialog2-header">
+                    <h2 class="aui-dialog2-header-main">Mass Clonning</h2>
+                    <a class="aui-dialog2-header-close">
+                        <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
+                    </a>
+                </header>
+                <form class="aui">
+                    <div class="aui-dialog2-content">
+                        <div class="field-group">
+                            <aui-label for="select2-scheme">Schemes:</aui-label>
+                            <select id="select2-scheme" placeholder="Select Scheme" onchange="fillObjectTypes()"></select>
+                            </br>
+                            </br>
+                            <aui-label for="select2-object-type">Object Type:</aui-label>
+                            <select id="select2-object-type" placeholder="Select Object Type" onchange="findSourceObject()"></select>
+                            </br>
+                            </br>
+                            <aui-label for="select2-source-object">Source object:</aui-label>
+                            <select id="select2-source-object" placeholder="Select Source Object" onchange="updateFooterTwice()"></select>
+                            </br>
+                            </br>
+                            <label for="direct-number">Object Key:</label>
+                            <input class="text" type="text" id="direct-number" name="text-input" title="Text input" placeholder="CI-123" onchange="updateFooter()">
+                            <div class="description">This value will be prefered more than 'Source Object'</div>
+                            <label for="quantity">Quantity:</label>
+                            <input class="text" type="text" id="quantity" name="text-input" title="Text input" onchange="filterNonDigit()">
+                            <div class="description">Maximum amount is 50</div>
+                        </div>
+                    </div>
+                </form>
+                <footer class="aui-dialog2-footer">
+                    <div class="aui-dialog2-footer-actions">
+                        <button class="aui-button" id="submit" resolved="" style="visibility: hidden;" onclick="submit()">Create objects</button>
+                        <button id="dialog-close-button" class="aui-button aui-button-link">Close</button>
+                    </div>
+                    <div class="aui-dialog2-footer-hint">Create many objects</div>
+                </footer>
+            </section>
