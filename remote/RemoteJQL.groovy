@@ -1,6 +1,7 @@
 import com.atlassian.jira.component.ComponentAccessor
 import com.atlassian.jira.applinks.JiraApplicationLinkService
 import java.net.HttpURLConnection
+import groovy.json.JsonSlurper
 
 String customFields = "customfield_10204, customfield_10205, summary, description"
 getRemoteIssues("project = test",customFields)
