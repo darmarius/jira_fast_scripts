@@ -151,6 +151,7 @@ class BasicHelper{
     }
 
     static void sendMail(String emailAddress, String subject, String body) {
+        log.setLevel(Level.DEBUG)
         try{
             Email mail = new Email(emailAddress)
             mail.setSubject(subject)
@@ -165,7 +166,8 @@ class BasicHelper{
         }
     }
 
-    static void createComment(MutableIssue issue, ApplicationUser author, String commentText, boolean internal){
+    static void createComment(MutableIssue issue, ApplicationUser author, String commentText, boolean internal=false){
+        log.setLevel(Level.DEBUG)
         try{
             final SD_PUBLIC_COMMENT = "sd.public.comment"
             def properties = [(SD_PUBLIC_COMMENT): new JSONObject().put("internal", internal)]
@@ -177,12 +179,13 @@ class BasicHelper{
         }
     }
 
-    static void updateIssue(MutableIssue issue, EventDispatchOption dispatchOption, boolean sendEmail) {
+    static void updateIssue(MutableIssue issue, EventDispatchOption dispatchOption, boolean sendEmail=false) {
         issueManager.updateIssue(sysUser,issue,dispatchOption,sendEmail)
     	ComponentAccessor.getComponent(IssueIndexingService.class).reIndex(issue)
     }
 
     static boolean transitIssue(MutableIssue issue, String transitionName){
+        log.setLevel(Level.DEBUG)
         def workflow = ComponentAccessor.workflowManager.getWorkflow(issue)
         IssueService issueService = ComponentAccessor.getIssueService()
         for(int transitionID : workflow.getActionsByName(transitionName)*.id){
@@ -200,6 +203,7 @@ class BasicHelper{
     }
 
     static List<MutableIssue> getIssuesByJql(String jql){
+        log.setLevel(Level.DEBUG)
         JqlQueryParser jqlQueryParser = ComponentAccessor.getComponent(JqlQueryParser)
         SearchService searchService = ComponentAccessor.getComponent(SearchService)
         List<MutableIssue> resultList = new ArrayList<MutableIssue>()
